@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+  <meta name="theme-color" content="#1a0f08" />
+  <meta name="description" content="Number Puzzle Pro — a premium sliding puzzle game with number and photo modes, multiple board sizes and sequences." />
+  <title>Number Puzzle Pro</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/png" href="assets/icons/logo.png" />
+  <link rel="apple-touch-icon" href="assets/icons/logo.png" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="theme-dark">
+
+<!-- ============ LOADING SCREEN ============ -->
+<div id="loading-screen" class="loader">
+  <div class="loader-ring"></div>
+  <img src="assets/icons/logo.png" alt="Number Puzzle Pro" class="loader-logo" />
+  <p>Loading Number Puzzle Pro…</p>
+</div>
+
+<!-- ============ APP SHELL ============ -->
+<div id="app" class="app hidden">
+
+  <!-- LEFT INFO PANEL -->
+  <aside id="info-panel" class="side-panel side-panel-left" aria-label="Information">
+    <header class="panel-header">
+      <h2>Information</h2>
+      <button class="icon-btn" data-close-panel="info-panel" aria-label="Close">✕</button>
+    </header>
+    <nav class="panel-list">
+      <a href="pages/about.html" target="_blank" rel="noopener">📖 About The App</a>
+      <a href="pages/guide.html" target="_blank" rel="noopener">🎯 How To Play</a>
+      <a href="pages/privacy.html" target="_blank" rel="noopener">🔒 Privacy Policy</a>
+      <a href="pages/privacy.html#terms" target="_blank" rel="noopener">📜 Terms &amp; Conditions</a>
+      <a href="#" id="install-app-link">⬇️ Install App</a>
+      <a href="https://play.google.com" target="_blank" rel="noopener">▶️ Play Store</a>
+      <a href="mailto:dev@numberpuzzlepro.app">✉️ Contact Developer</a>
+      <div class="panel-meta">
+        <p><strong>Version</strong> <span id="app-version">1.0.0</span></p>
+        <p><strong>Changelog</strong> — Initial release</p>
+      </div>
+      <div class="panel-actions">
+        <button class="btn btn-ghost" id="btn-export-data">Export Data</button>
+        <button class="btn btn-ghost" id="btn-import-data">Import Backup</button>
+        <input type="file" id="import-file" accept="application/json" hidden />
+        <button class="btn btn-danger" id="btn-reset-data">Reset All Data</button>
+      </div>
+    </nav>
+  </aside>
+
+  <!-- RIGHT DASHBOARD PANEL -->
+  <aside id="dashboard-panel" class="side-panel side-panel-right" aria-label="Dashboard">
+    <header class="panel-header">
+      <h2>Dashboard</h2>
+      <button class="icon-btn" data-close-panel="dashboard-panel" aria-label="Close">✕</button>
+    </header>
+    <div class="panel-body" id="dashboard-body">
+      <!-- filled by JS -->
+    </div>
+  </aside>
+
+  <!-- BACKDROP -->
+  <div id="panel-backdrop" class="panel-backdrop"></div>
+
+  <!-- ============ HOME SCREEN ============ -->
+  <section id="screen-home" class="screen screen-home active">
+    <header class="topbar">
+      <button class="icon-btn" id="open-info" aria-label="Open info">☰</button>
+      <div class="brand">
+        <img src="assets/icons/logo.png" alt="" />
+        <h1>Number Puzzle <span>PRO</span></h1>
+      </div>
+      <button class="icon-btn" id="open-dashboard" aria-label="Open dashboard">📊</button>
+    </header>
+
+    <main class="home-main">
+      <!-- LIVE PREVIEW BOARD -->
+      <div class="preview-wrap">
+        <div class="preview-frame">
+          <div id="preview-board" class="preview-board" aria-label="Live preview"></div>
+        </div>
+        <p class="preview-label">Live Preview</p>
+      </div>
+
+      <!-- SETTINGS -->
+      <div class="settings">
+
+        <!-- Board Size -->
+        <div class="setting-row">
+          <label>Board Size</label>
+          <div class="picker">
+            <button class="picker-arrow" data-picker="size" data-dir="-1" aria-label="Previous">‹</button>
+            <span class="picker-value" id="picker-size">3 × 3</span>
+            <button class="picker-arrow" data-picker="size" data-dir="1" aria-label="Next">›</button>
+          </div>
+        </div>
+
+        <!-- Sequence -->
+        <div class="setting-row">
+          <label>Sequence</label>
+          <div class="picker">
+            <button class="picker-arrow" data-picker="sequence" data-dir="-1" aria-label="Previous">‹</button>
+            <span class="picker-value" id="picker-sequence">Classic</span>
+            <button class="picker-arrow" data-picker="sequence" data-dir="1" aria-label="Next">›</button>
+          </div>
+        </div>
+
+        <!-- Mode -->
+        <div class="setting-row">
+          <label>Game Mode</label>
+          <div class="picker">
+            <button class="picker-arrow" data-picker="mode" data-dir="-1" aria-label="Previous">‹</button>
+            <span class="picker-value" id="picker-mode">Number</span>
+            <button class="picker-arrow" data-picker="mode" data-dir="1" aria-label="Next">›</button>
+          </div>
+        </div>
+
+        <!-- Difficulty -->
+        <div class="setting-row">
+          <label>Difficulty</label>
+          <div class="picker">
+            <button class="picker-arrow" data-picker="difficulty" data-dir="-1" aria-label="Previous">‹</button>
+            <span class="picker-value" id="picker-difficulty">Medium</span>
+            <button class="picker-arrow" data-picker="difficulty" data-dir="1" aria-label="Next">›</button>
+          </div>
+        </div>
+
+        <!-- Photo upload (hidden unless Photo mode) -->
+        <div class="setting-row photo-row hidden" id="photo-upload-row">
+          <label>Your Photo</label>
+          <div class="photo-dropzone" id="photo-dropzone">
+            <input type="file" id="photo-input" accept="image/png,image/jpeg,image/webp" hidden />
+            <input type="file" id="photo-camera" accept="image/*" capture="environment" hidden />
+            <div class="dz-content">
+              <span class="dz-icon">📷</span>
+              <p>Drag &amp; drop, click to upload, or use camera</p>
+              <div class="dz-actions">
+                <button class="btn btn-ghost" id="btn-pick-photo">Upload</button>
+                <button class="btn btn-ghost" id="btn-camera-photo">Camera</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Play buttons -->
+      <div class="home-cta">
+        <button class="btn btn-primary btn-large" id="btn-play">▶ Play</button>
+        <button class="btn btn-ghost" id="btn-continue" hidden>↺ Continue Last Game</button>
+      </div>
+
+    </main>
+
+    <footer class="hint-row">
+      <span>← Swipe right for Info</span>
+      <span>Swipe left for Stats →</span>
+    </footer>
+  </section>
+
+  <!-- ============ GAME SCREEN ============ -->
+  <section id="screen-game" class="screen screen-game">
+    <header class="topbar game-topbar">
+      <button class="icon-btn" id="btn-back-home" aria-label="Back">←</button>
+      <div class="hud">
+        <div class="hud-cell"><span class="hud-label">Moves</span><span class="hud-value" id="hud-moves">0</span></div>
+        <div class="hud-cell"><span class="hud-label">Time</span><span class="hud-value" id="hud-time">00:00</span></div>
+      </div>
+      <button class="icon-btn" id="btn-pause" aria-label="Pause">⏸</button>
+    </header>
+
+    <main class="game-main">
+      <div id="board-stage" class="board-stage">
+        <div id="board" class="board" tabindex="0" aria-label="Puzzle board"></div>
+      </div>
+
+      <div class="game-controls">
+        <button class="ctrl-btn" id="btn-hint" title="Hint">💡<span>Hint</span></button>
+        <button class="ctrl-btn" id="btn-undo" title="Undo">↶<span>Undo</span></button>
+        <button class="ctrl-btn" id="btn-redo" title="Redo">↷<span>Redo</span></button>
+        <button class="ctrl-btn" id="btn-shuffle" title="Shuffle">🔀<span>Shuffle</span></button>
+        <button class="ctrl-btn" id="btn-restart" title="Restart">🔄<span>Restart</span></button>
+        <button class="ctrl-btn" id="btn-fullscreen" title="Fullscreen">⛶<span>Full</span></button>
+      </div>
+    </main>
+  </section>
+
+  <!-- ============ PAUSE OVERLAY ============ -->
+  <div id="pause-overlay" class="modal hidden">
+    <div class="modal-card">
+      <h2>Paused</h2>
+      <p>Take a break. Your progress is safe.</p>
+      <div class="modal-actions">
+        <button class="btn btn-primary" id="btn-resume">Resume</button>
+        <button class="btn btn-ghost" id="btn-pause-restart">Restart</button>
+        <button class="btn btn-ghost" id="btn-pause-home">Main Menu</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ CONFIRM DIALOG ============ -->
+  <div id="confirm-dialog" class="modal hidden">
+    <div class="modal-card">
+      <h3 id="confirm-title">Are you sure?</h3>
+      <p id="confirm-message">This action cannot be undone.</p>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" id="confirm-cancel">Cancel</button>
+        <button class="btn btn-danger" id="confirm-ok">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ RESULT SCREEN ============ -->
+  <section id="screen-result" class="screen screen-result">
+    <canvas id="fx-canvas" class="fx-canvas"></canvas>
+    <div class="result-card">
+      <div class="trophy-wrap">
+        <div class="trophy" aria-hidden="true">🏆</div>
+        <div class="trophy-glow"></div>
+      </div>
+      <h2 class="congrats">Congratulations!</h2>
+      <p class="subtitle">You solved the puzzle.</p>
+      <div class="result-grid">
+        <div><span>Moves</span><strong id="res-moves">0</strong></div>
+        <div><span>Time</span><strong id="res-time">00:00</strong></div>
+        <div><span>Board</span><strong id="res-board">3×3</strong></div>
+        <div><span>Sequence</span><strong id="res-sequence">Classic</strong></div>
+        <div><span>Mode</span><strong id="res-mode">Number</strong></div>
+        <div><span>Record</span><strong id="res-record">—</strong></div>
+      </div>
+      <div id="new-record-badge" class="new-record hidden">★ NEW RECORD ★</div>
+      <div class="modal-actions">
+        <button class="btn btn-primary" id="btn-play-again">Play Again</button>
+        <button class="btn btn-ghost" id="btn-result-home">Main Menu</button>
+        <button class="btn btn-ghost" id="btn-share">Share</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TOASTS ============ -->
+  <div id="toast-stack" class="toast-stack" aria-live="polite"></div>
+
+</div><!-- /app -->
+
+<script src="script.js" defer></script>
+</body>
+</html>
