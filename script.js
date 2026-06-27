@@ -31,7 +31,19 @@ const STORAGE_KEY  = 'npp.v1';
 /* -------------------- STORAGE -------------------- */
 const Storage = (() => {
   const DEFAULT = {
-    settings: { size: 3, sequence: 'Classic', mode: 'Number', difficulty: 'Medium',
+    settings:{
+    size:3,
+    sequence:'Classic',
+    mode:'Number',
+    difficulty:'Medium',
+    sound:true,
+    vibration:true,
+    theme:'dark',
+    volume:0.7,
+
+    photoNumbers:true
+},
+   { size: 3, sequence: 'Classic', mode: 'Number', difficulty: 'Medium',
                 sound: true, vibration: true, theme: 'dark', volume: 0.7 },
     last:     null,                 // last-saved in-progress game
     highs:    {},                   // key `${size}-${seq}-${mode}` -> {moves,time}
@@ -975,23 +987,6 @@ $('#preset-next').addEventListener('click', () => {
       setTimeout(() => { renderBoard(false); tickTimer(); }, 60);
     });
 
-   /* ===== TIMER COLOR ===== */
-
-#hud-time{
-    transition:color .3s ease;
-}
-
-#hud-time.time-normal{
-    color:var(--text);
-}
-
-#hud-time.time-warning{
-    color:#ffb300;
-}
-
-#hud-time.time-danger{
-    color:#ff4d4d;
-}
     /* game controls */
     $('#btn-back-home').addEventListener('click', async () => {
       if (Game.get() && !Game.get().finished && Game.get().moves > 0) {
