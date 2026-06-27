@@ -1,32 +1,70 @@
-/* Number Puzzle Pro — offline cache */
-const CACHE = 'npp-v1';
-const ASSETS = [
+/* Number Puzzle Pro — Advanced Service Worker v1.1 */
+const CACHE_NAME = 'npp-v1.1';
+
+// In assets ko cache mein store kiya jayega
+const STATIC_ASSETS = [
   './',
   './index.html',
   './style.css',
   './script.js',
   './manifest.json',
   './assets/icons/logo.png',
+  './assets/images/preset-1.jpg',
+  './assets/images/preset-2.jpg',
+  './assets/images/preset-3.jpg',
+  './assets/images/preset-4.jpg',
+  './assets/sound/move.wav',
+  './assets/sound/click.wav',
+  './assets/sound/win.wav',
+  './assets/sound/error.wav',
   './pages/about.html',
   './pages/guide.html',
   './pages/privacy.html'
 ];
 
-self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
+// Install Event: Assets ko cache mein save karna
+self.addEventListener('install', event => {
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(cache => cache.addAll(STATIC_ASSETS))
+      .then(() => self.skipWaiting())
+  );
 });
-self.addEventListener('activate', e => {
-  e.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim()));
+
+// Activate Event: Purane caches ko delete karna
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    caches.keys().then(keys => {
+      return Promise.all(
+        keys.filter(key => key !== CACHE_NAME)
+            .map(key => caches.delete(key))
+      );
+    }).then(() => self.clients.claim())
+  );
 });
-self.addEventListener('fetch', e => {
-  const req = e.request;
+
+// Fetch Event: Offline support + Performance
+self.addEventListener('fetch', event => {
+  const req = event.request;
+  
+  // Sirf GET requests handle karein
   if (req.method !== 'GET') return;
-  e.respondWith(
-    caches.match(req).then(hit => hit || fetch(req).then(res => {
-      if (res.ok && new URL(req.url).origin === location.origin) {
-        const copy = res.clone(); caches.open(CACHE).then(c => c.put(req, copy));
-      }
-      return res;
-    }).catch(() => caches.match('./index.html')))
+
+  event.respondWith(
+    caches.match(req).then(cachedResponse => {
+      // Agar cache mein hai toh wahi dikhao, saath mein background mein update check karo
+      const fetchPromise = fetch(req).then(networkResponse => {
+        if (networkResponse && networkResponse.status === 200) {
+          const responseClone = networkResponse.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(req, responseClone));
+        }
+        return networkResponse;
+      }).catch(() => {
+        // Agar network fail ho jaye aur cache mein bhi na ho, toh index.html dikhao
+        if (req.mode === 'navigate') return caches.match('./index.html');
+      });
+
+      return cachedResponse || fetchPromise;
+    })
   );
 });
