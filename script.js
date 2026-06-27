@@ -486,6 +486,17 @@ let presetIndex = 0;
         renderPreview();
         t.style.backgroundSize  = `${n*100}% ${n*100}%`;
         t.style.backgroundPosition = `${(c/(n-1))*100}% ${(r/(n-1))*100}%`;
+         if(Storage.get().settings.photoNumbers){
+
+    const badge=document.createElement('div');
+
+    badge.className='photo-number';
+
+    badge.textContent=val;
+
+    t.appendChild(badge);
+
+         }
       } else {
         t.textContent = labels[i];
       }
@@ -578,12 +589,22 @@ let presetIndex = 0;
     return `${String(Math.floor(s / 60)).padStart(2,'0')}:${String(s % 60).padStart(2,'0')}`;
   }
   function tickTimer() {
+
     clearInterval(timerInt);
+
     timerInt = setInterval(() => {
-      if (paused || Game.get().finished) return;
-      hudTime.textContent = formatTime(currentElapsed());
+
+        if (paused || Game.get().finished) return;
+
+        const elapsed = currentElapsed();
+
+        hudTime.textContent = formatTime(elapsed);
+
+        updateTimerColor(elapsed);
+
     }, 250);
-  }
+
+}
 
   function updateControls() {
     const st = Game.get();
@@ -632,6 +653,21 @@ let presetIndex = 0;
 
     setTimeout(() => showResult(st, isRecord, prev), 700);
   }
+   function calculateRating(moves,time){
+
+    let stars=5;
+
+    if(time>60000) stars--;
+
+    if(time>180000) stars--;
+
+    if(moves>80) stars--;
+
+    if(moves>140) stars--;
+
+    return Math.max(stars,1);
+
+      }
 
   function showResult(st, isRecord, prev) {
     $('#res-moves').textContent    = st.moves;
@@ -640,6 +676,14 @@ let presetIndex = 0;
     $('#res-sequence').textContent = st.sequence;
     $('#res-mode').textContent     = st.mode;
     $('#res-record').textContent   = prev ? `${prev.moves} / ${formatTime(prev.time)}` : 'First!';
+     const stars=calculateRating(
+    st.moves,
+    st.elapsed
+);
+
+$('#result-rating').textContent=
+'★'.repeat(stars)+
+'☆'.repeat(5-stars);
     $('#new-record-badge').classList.toggle('hidden', !isRecord);
     showScreen('result');
     FX.start();
@@ -931,6 +975,23 @@ $('#preset-next').addEventListener('click', () => {
       setTimeout(() => { renderBoard(false); tickTimer(); }, 60);
     });
 
+   /* ===== TIMER COLOR ===== */
+
+#hud-time{
+    transition:color .3s ease;
+}
+
+#hud-time.time-normal{
+    color:var(--text);
+}
+
+#hud-time.time-warning{
+    color:#ffb300;
+}
+
+#hud-time.time-danger{
+    color:#ff4d4d;
+}
     /* game controls */
     $('#btn-back-home').addEventListener('click', async () => {
       if (Game.get() && !Game.get().finished && Game.get().moves > 0) {
@@ -1041,12 +1102,25 @@ $('#preset-next').addEventListener('click', () => {
     }
   }
 
-  function refreshContinue() {
-    $('#btn-continue').hidden = !Storage.get().last;
-  }
+  function refreshContinue(){
 
-  return { init };
-})();
+    const btn=$('#btn-continue');
+
+    if(Storage.get().last){
+
+        btn.hidden=false;
+
+        btn.innerHTML=
+        '<span class="resume-dot"></span>Continue';
+
+    }
+    else{
+
+        btn.hidden=true;
+
+    }
+
+         }
 
 /* expose buildSolved to UI module (defined in module scope) */
 function buildSolved(n, seq) {
