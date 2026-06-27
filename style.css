@@ -707,3 +707,21 @@ button { font-family: inherit; cursor:pointer; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
+
+/* Hide photo preset row by default */
+.setting-row.photo-preset-row.hidden { display: none !important; }
+
+/* Premium Tile Transition */
+.tile {
+  position: absolute;
+  will-change: transform;
+  user-select: none;
+  touch-action: none;
+  transition: transform 0.2s cubic-bezier(0.18, 0.89, 0.32, 1.28); /* Elastic snap */
+}
+
+/* While dragging, disable transition for 1:1 finger tracking */
+.tile.dragging {
+  transition: none !important;
+  z-index: 10;
+}
