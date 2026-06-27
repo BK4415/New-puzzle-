@@ -25,54 +25,211 @@
 
   <!-- LEFT INFO PANEL -->
   <aside id="info-panel" class="side-panel side-panel-left" aria-label="Information">
+
     <header class="panel-header">
       <h2>Information</h2>
-      <button class="icon-btn" data-close-panel="info-panel" aria-label="Close">✕</button>
+
+      <button class="icon-btn" data-close-panel="info-panel" aria-label="Close">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M6 6L18 18"/>
+          <path d="M18 6L6 18"/>
+        </svg>
+      </button>
     </header>
+
     <nav class="panel-list">
-      <a href="pages/about.html" target="_blank" rel="noopener">📖 About The App</a>
-      <a href="pages/guide.html" target="_blank" rel="noopener">🎯 How To Play</a>
-      <a href="pages/privacy.html" target="_blank" rel="noopener">🔒 Privacy Policy</a>
-      <a href="pages/privacy.html#terms" target="_blank" rel="noopener">📜 Terms &amp; Conditions</a>
-      <a href="#" id="install-app-link">⬇️ Install App</a>
-      <a href="https://play.google.com" target="_blank" rel="noopener">▶️ Play Store</a>
-      <a href="mailto:dev@numberpuzzlepro.app">✉️ Contact Developer</a>
+
+      <!-- About -->
+      <a href="pages/about.html" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+          <path d="M6.5 2H20v18H6.5A2.5 2.5 0 0 0 4 22V4.5A2.5 2.5 0 0 1 6.5 2z"/>
+        </svg>
+        <span>About The App</span>
+      </a>
+
+      <!-- Guide -->
+      <a href="pages/guide.html" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="9"/>
+          <path d="M12 7v5l3 3"/>
+        </svg>
+        <span>How To Play</span>
+      </a>
+
+      <!-- Privacy -->
+      <a href="pages/privacy.html" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="5" y="11" width="14" height="10" rx="2"/>
+          <path d="M8 11V8a4 4 0 0 1 8 0v3"/>
+        </svg>
+        <span>Privacy Policy</span>
+      </a>
+
+      <!-- Terms -->
+      <a href="pages/privacy.html#terms" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16l4-2 4 2 4-2 4 2V8z"/>
+          <path d="M8 7h8M8 11h8M8 15h5"/>
+        </svg>
+        <span>Terms & Conditions</span>
+      </a>
+
+      <!-- Install -->
+      <a href="#" id="install-app-link">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 3v12"/>
+          <path d="M8 11l4 4 4-4"/>
+          <path d="M5 21h14"/>
+        </svg>
+        <span>Install App</span>
+      </a>
+
+      <!-- Play Store -->
+      <a href="https://play.google.com" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+          <polygon points="5,3 20,12 5,21"/>
+        </svg>
+        <span>Play Store</span>
+      </a>
+
+      <!-- Contact -->
+      <a href="mailto:dev@numberpuzzlepro.app">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="5" width="18" height="14" rx="2"/>
+          <path d="M3 7l9 6 9-6"/>
+        </svg>
+        <span>Contact Developer</span>
+      </a>
+
       <div class="panel-meta">
         <p><strong>Version</strong> <span id="app-version">1.0.0</span></p>
         <p><strong>Changelog</strong> — Initial release</p>
       </div>
+
       <div class="panel-actions">
-        <button class="btn btn-ghost" id="btn-export-data">Export Data</button>
-        <button class="btn btn-ghost" id="btn-import-data">Import Backup</button>
-        <input type="file" id="import-file" accept="application/json" hidden />
-        <button class="btn btn-danger" id="btn-reset-data">Reset All Data</button>
+
+        <button class="btn btn-ghost" id="btn-export-data">
+          Export Data
+        </button>
+
+        <button class="btn btn-ghost" id="btn-import-data">
+          Import Backup
+        </button>
+
+        <input type="file"
+               id="import-file"
+               accept="application/json"
+               hidden>
+
+        <button class="btn btn-danger" id="btn-reset-data">
+          Reset All Data
+        </button>
+
       </div>
+
     </nav>
+
   </aside>
+
 
   <!-- RIGHT DASHBOARD PANEL -->
-  <aside id="dashboard-panel" class="side-panel side-panel-right" aria-label="Dashboard">
+<aside id="dashboard-panel" class="side-panel side-panel-right" aria-label="Dashboard">
+
     <header class="panel-header">
-      <h2>Dashboard</h2>
-      <button class="icon-btn" data-close-panel="dashboard-panel" aria-label="Close">✕</button>
+
+        <h2>Dashboard</h2>
+
+        <button class="icon-btn"
+                data-close-panel="dashboard-panel"
+                aria-label="Close">
+
+            <svg viewBox="0 0 24 24"
+                 width="22"
+                 height="22"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round">
+
+                <path d="M6 6L18 18"/>
+                <path d="M18 6L6 18"/>
+
+            </svg>
+
+        </button>
+
     </header>
+
     <div class="panel-body" id="dashboard-body">
-      <!-- filled by JS -->
+        <!-- Filled by JavaScript -->
     </div>
-  </aside>
 
-  <!-- BACKDROP -->
-  <div id="panel-backdrop" class="panel-backdrop"></div>
+</aside>
 
-  <!-- ============ HOME SCREEN ============ -->
-  <section id="screen-home" class="screen screen-home active">
+<!-- BACKDROP -->
+<div id="panel-backdrop" class="panel-backdrop"></div>
+
+<!-- ================= HOME SCREEN ================= -->
+
+<section id="screen-home" class="screen screen-home active">
+
     <header class="topbar">
-      <button class="icon-btn" id="open-info" aria-label="Open info">☰</button>
-      <div class="brand">
-        <img src="assets/icons/logo.png" alt="" />
-        <h1>Number Puzzle <span>PRO</span></h1>
-      </div>
-      <button class="icon-btn" id="open-dashboard" aria-label="Open dashboard">📊</button>
+
+        <!-- Menu Button -->
+        <button class="icon-btn"
+                id="open-info"
+                aria-label="Open Menu">
+
+            <svg viewBox="0 0 24 24"
+                 width="24"
+                 height="24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round">
+
+                <path d="M3 6H21"/>
+                <path d="M3 12H21"/>
+                <path d="M3 18H21"/>
+
+            </svg>
+
+        </button>
+
+        <!-- Logo -->
+        <div class="brand">
+
+            <img src="assets/icons/logo.png" alt="Number Puzzle Pro Logo">
+
+            <h1>
+                Number Puzzle
+                <span>PRO</span>
+            </h1>
+
+        </div>
+
+        <!-- Dashboard Button -->
+        <button class="icon-btn"
+                id="open-dashboard"
+                aria-label="Open Dashboard">
+
+            <svg viewBox="0 0 24 24"
+                 width="24"
+                 height="24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2">
+
+                <rect x="3" y="3" width="7" height="7" rx="2"/>
+                <rect x="14" y="3" width="7" height="11" rx="2"/>
+                <rect x="3" y="14" width="7" height="7" rx="2"/>
+                <rect x="14" y="18" width="7" height="3" rx="2"/>
+
+            </svg>
+
+        </button>
+
     </header>
 
     <main class="home-main">
@@ -159,90 +316,203 @@
     </footer>
   </section>
 
-  <!-- ============ GAME SCREEN ============ -->
-  <section id="screen-game" class="screen screen-game">
-    <header class="topbar game-topbar">
-      <button class="icon-btn" id="btn-back-home" aria-label="Back">←</button>
-      <div class="hud">
-        <div class="hud-cell"><span class="hud-label">Moves</span><span class="hud-value" id="hud-moves">0</span></div>
-        <div class="hud-cell"><span class="hud-label">Time</span><span class="hud-value" id="hud-time">00:00</span></div>
-      </div>
-      <button class="icon-btn" id="btn-pause" aria-label="Pause">⏸</button>
-    </header>
+  <<!-- ============ GAME SCREEN ============ -->
+<section id="screen-game" class="screen screen-game">
 
-    <main class="game-main">
-      <div id="board-stage" class="board-stage">
-        <div id="board" class="board" tabindex="0" aria-label="Puzzle board"></div>
+  <header class="topbar game-topbar">
+
+    <!-- Back -->
+    <button class="icon-btn" id="btn-back-home" aria-label="Back">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M15 18L9 12L15 6"/>
+      </svg>
+    </button>
+
+    <div class="hud">
+      <div class="hud-cell">
+        <span class="hud-label">Moves</span>
+        <span class="hud-value" id="hud-moves">0</span>
       </div>
 
-      <div class="game-controls">
-        <button class="ctrl-btn" id="btn-hint" title="Hint">💡<span>Hint</span></button>
-        <button class="ctrl-btn" id="btn-undo" title="Undo">↶<span>Undo</span></button>
-        <button class="ctrl-btn" id="btn-redo" title="Redo">↷<span>Redo</span></button>
-        <button class="ctrl-btn" id="btn-shuffle" title="Shuffle">🔀<span>Shuffle</span></button>
-        <button class="ctrl-btn" id="btn-restart" title="Restart">🔄<span>Restart</span></button>
-        <button class="ctrl-btn" id="btn-fullscreen" title="Fullscreen">⛶<span>Full</span></button>
+      <div class="hud-cell">
+        <span class="hud-label">Time</span>
+        <span class="hud-value" id="hud-time">00:00</span>
       </div>
-    </main>
-  </section>
+    </div>
 
-  <!-- ============ PAUSE OVERLAY ============ -->
-  <div id="pause-overlay" class="modal hidden">
-    <div class="modal-card">
-      <h2>Paused</h2>
-      <p>Take a break. Your progress is safe.</p>
-      <div class="modal-actions">
-        <button class="btn btn-primary" id="btn-resume">Resume</button>
-        <button class="btn btn-ghost" id="btn-pause-restart">Restart</button>
-        <button class="btn btn-ghost" id="btn-pause-home">Main Menu</button>
-      </div>
+    <!-- Pause -->
+    <button class="icon-btn" id="btn-pause" aria-label="Pause">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+        <rect x="6" y="5" width="4" height="14" rx="1"/>
+        <rect x="14" y="5" width="4" height="14" rx="1"/>
+      </svg>
+    </button>
+
+  </header>
+
+  <main class="game-main">
+
+    <div id="board-stage" class="board-stage">
+      <div id="board"
+           class="board"
+           tabindex="0"
+           aria-label="Puzzle board"></div>
+    </div>
+
+    <div class="game-controls">
+
+      <!-- Hint -->
+      <button class="ctrl-btn" id="btn-hint" title="Hint">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 18h6"/>
+          <path d="M10 22h4"/>
+          <path d="M12 2a7 7 0 0 0-4 13c1 1 1 2 1 3h6c0-1 0-2 1-3a7 7 0 0 0-4-13z"/>
+        </svg>
+        <span>Hint</span>
+      </button>
+
+      <!-- Undo -->
+      <button class="ctrl-btn" id="btn-undo" title="Undo">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 14L4 9L9 4"/>
+          <path d="M20 20a8 8 0 0 0-8-8H4"/>
+        </svg>
+        <span>Undo</span>
+      </button>
+
+      <!-- Redo -->
+      <button class="ctrl-btn" id="btn-redo" title="Redo">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M15 14L20 9L15 4"/>
+          <path d="M4 20a8 8 0 0 1 8-8h8"/>
+        </svg>
+        <span>Redo</span>
+      </button>
+
+      <!-- Shuffle -->
+      <button class="ctrl-btn" id="btn-shuffle" title="Shuffle">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M16 3h5v5"/>
+          <path d="M4 20L21 3"/>
+          <path d="M21 16v5h-5"/>
+          <path d="M15 15l6 6"/>
+          <path d="M3 4l5 5"/>
+        </svg>
+        <span>Shuffle</span>
+      </button>
+
+      <!-- Restart -->
+      <button class="ctrl-btn" id="btn-restart" title="Restart">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 12a9 9 0 1 0 3-6.7"/>
+          <path d="M3 3v6h6"/>
+        </svg>
+        <span>Restart</span>
+      </button>
+
+      <!-- Fullscreen -->
+      <button class="ctrl-btn" id="btn-fullscreen" title="Fullscreen">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M8 3H3v5"/>
+          <path d="M21 8V3h-5"/>
+          <path d="M3 16v5h5"/>
+          <path d="M16 21h5v-5"/>
+        </svg>
+        <span>Full</span>
+      </button>
+
+    </div>
+
+  </main>
+
+</section>
+
+<!-- ============ PAUSE OVERLAY ============ -->
+
+<div id="pause-overlay" class="modal hidden">
+  <div class="modal-card">
+    <h2>Paused</h2>
+    <p>Take a break. Your progress is safe.</p>
+
+    <div class="modal-actions">
+      <button class="btn btn-primary" id="btn-resume">Resume</button>
+      <button class="btn btn-ghost" id="btn-pause-restart">Restart</button>
+      <button class="btn btn-ghost" id="btn-pause-home">Main Menu</button>
     </div>
   </div>
+</div>
 
-  <!-- ============ CONFIRM DIALOG ============ -->
-  <div id="confirm-dialog" class="modal hidden">
-    <div class="modal-card">
-      <h3 id="confirm-title">Are you sure?</h3>
-      <p id="confirm-message">This action cannot be undone.</p>
-      <div class="modal-actions">
-        <button class="btn btn-ghost" id="confirm-cancel">Cancel</button>
-        <button class="btn btn-danger" id="confirm-ok">Confirm</button>
-      </div>
+<!-- ============ CONFIRM DIALOG ============ -->
+
+<div id="confirm-dialog" class="modal hidden">
+  <div class="modal-card">
+    <h3 id="confirm-title">Are you sure?</h3>
+    <p id="confirm-message">This action cannot be undone.</p>
+
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="confirm-cancel">Cancel</button>
+      <button class="btn btn-danger" id="confirm-ok">Confirm</button>
     </div>
   </div>
+</div>
 
-  <!-- ============ RESULT SCREEN ============ -->
-  <section id="screen-result" class="screen screen-result">
-    <canvas id="fx-canvas" class="fx-canvas"></canvas>
-    <div class="result-card">
-      <div class="trophy-wrap">
-        <div class="trophy" aria-hidden="true">🏆</div>
-        <div class="trophy-glow"></div>
+<!-- ============ RESULT SCREEN ============ -->
+
+<section id="screen-result" class="screen screen-result">
+
+  <canvas id="fx-canvas" class="fx-canvas"></canvas>
+
+  <div class="result-card">
+
+    <div class="trophy-wrap">
+
+      <div class="trophy" aria-hidden="true">
+        <svg viewBox="0 0 64 64" width="90" height="90" fill="none">
+          <path d="M18 10h28v10c0 10-6 18-14 18S18 30 18 20V10z" fill="#FFD54F"/>
+          <path d="M24 38h16v8H24z" fill="#D4AF37"/>
+          <path d="M20 46h24v8H20z" fill="#C49A00"/>
+          <path d="M10 12h8v8c0 6-4 10-8 10V12zm44 0h-8v8c0 6 4 10 8 10V12z" fill="#FFD54F"/>
+        </svg>
       </div>
-      <h2 class="congrats">Congratulations!</h2>
-      <p class="subtitle">You solved the puzzle.</p>
-      <div class="result-grid">
-        <div><span>Moves</span><strong id="res-moves">0</strong></div>
-        <div><span>Time</span><strong id="res-time">00:00</strong></div>
-        <div><span>Board</span><strong id="res-board">3×3</strong></div>
-        <div><span>Sequence</span><strong id="res-sequence">Classic</strong></div>
-        <div><span>Mode</span><strong id="res-mode">Number</strong></div>
-        <div><span>Record</span><strong id="res-record">—</strong></div>
-      </div>
-      <div id="new-record-badge" class="new-record hidden">★ NEW RECORD ★</div>
-      <div class="modal-actions">
-        <button class="btn btn-primary" id="btn-play-again">Play Again</button>
-        <button class="btn btn-ghost" id="btn-result-home">Main Menu</button>
-        <button class="btn btn-ghost" id="btn-share">Share</button>
-      </div>
+
+      <div class="trophy-glow"></div>
+
     </div>
-  </section>
 
-  <!-- ============ TOASTS ============ -->
-  <div id="toast-stack" class="toast-stack" aria-live="polite"></div>
+    <h2 class="congrats">Congratulations!</h2>
+
+    <p class="subtitle">You solved the puzzle.</p>
+
+    <div class="result-grid">
+      <div><span>Moves</span><strong id="res-moves">0</strong></div>
+      <div><span>Time</span><strong id="res-time">00:00</strong></div>
+      <div><span>Board</span><strong id="res-board">3×3</strong></div>
+      <div><span>Sequence</span><strong id="res-sequence">Classic</strong></div>
+      <div><span>Mode</span><strong id="res-mode">Number</strong></div>
+      <div><span>Record</span><strong id="res-record">—</strong></div>
+    </div>
+
+    <div id="new-record-badge" class="new-record hidden">
+      ★ NEW RECORD ★
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-primary" id="btn-play-again">Play Again</button>
+      <button class="btn btn-ghost" id="btn-result-home">Main Menu</button>
+      <button class="btn btn-ghost" id="btn-share">Share</button>
+    </div>
+
+  </div>
+
+</section>
+
+<!-- ============ TOASTS ============ -->
+
+<div id="toast-stack" class="toast-stack" aria-live="polite"></div>
 
 </div><!-- /app -->
 
 <script src="script.js" defer></script>
+
 </body>
 </html>
