@@ -1,3 +1,6 @@
+window.onerror = function(msg, src, line) {
+  console.log("JS ERROR:", msg, line);
+};
 /* =============================================================
    Number Puzzle Pro
    Pure vanilla JS sliding-puzzle game.
