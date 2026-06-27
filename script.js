@@ -751,6 +751,7 @@ let presetIndex = 0;
     const reader = new FileReader();
     reader.onload = e => optimizeImage(e.target.result).then(url => {
       photoDataURL = url;
+updatePresetPreview();
       const dz = $('#photo-dropzone');
       dz.classList.add('has-photo');
       dz.style.backgroundImage = `url(${url})`;
