@@ -1,15 +1,55 @@
 {
   "name": "Number Puzzle Pro",
   "short_name": "Puzzle Pro",
-  "description": "A premium sliding puzzle game with number and photo modes, multiple board sizes and sequences.",
+  "description": "Premium wood & gold sliding puzzle game. Solve classic number grids or your own photos with buttery smooth 60FPS physics.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
+  "display_override": ["window-controls-overlay"],
   "orientation": "portrait",
   "background_color": "#1a0f08",
-  "theme_color": "#1a0f08",
+  "theme_color": "#d9a441",
+  "categories": ["games", "puzzle", "brain"],
   "icons": [
-    { "src": "assets/icons/logo.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
-    { "src": "assets/icons/logo.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+    {
+      "src": "assets/icons/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icons/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "New Game",
+      "short_name": "Play",
+      "url": "./index.html?action=newgame",
+      "icons": [{ "src": "assets/icons/logo.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Dashboard",
+      "short_name": "Stats",
+      "url": "./index.html?action=stats",
+      "icons": [{ "src": "assets/icons/logo.png", "sizes": "192x192" }]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "assets/images/screenshot-1.jpg",
+      "sizes": "1080x1920",
+      "type": "image/jpg",
+      "label": "Premium Wooden Gameplay"
+    },
+    {
+      "src": "assets/images/screenshot-2.jpg",
+      "sizes": "1080x1920",
+      "type": "image/jpg",
+      "label": "Custom Photo Mode"
+    }
   ]
 }
