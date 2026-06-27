@@ -1,3 +1,70 @@
+        });
+    }
+
+    // 3. Game ke purane functions ko naye files se jodna
+    return {
+        move: () => playFile(sounds.move),
+        click: () => playFile(sounds.click),
+        win:  () => playFile(sounds.win),
+        err:  () => playFile(sounds.err)
+    };
+})();
+
+function vibrate(ms = 12) {
+  if (Storage.get().settings.vibration && navigator.vibrate) navigator.vibrate(ms);
+}
+
+/* -------------------- SEQUENCE GENERATORS --------------------
+   Each returns an array of length N*N whose values are the cell
+   indices in visit order. Tile 1 goes at order[0], tile 2 at
+   order[1], …, and the blank goes at order[N*N - 1].
+   The "goal layout" is therefore a permutation of the array
+   [1..N*N-1, 0] placed into board positions.
+------------------------------------------------------------- */
+const SequenceGen = {
+  Classic(n) {
+    return Array.from({ length: n * n }, (_, i) => i);
+  },
+  'Upside Down'(n) {
+    const arr = [];
+    for (let r = n - 1; r >= 0; r--) for (let c = n - 1; c >= 0; c--) arr.push(r * n + c);
+    return arr;
+  },
+  Snake(n) {
+    const arr = [];
+    for (let r = 0; r < n; r++) {
+      const row = [];
+      for (let c = 0; c < n; c++) row.push(r * n + c);
+      if (r % 2 === 1) row.reverse();
+      arr.push(...row);
+    }
+    return arr;
+  },
+  Spiral(n) {
+    const grid = Array.from({ length: n }, () => Array(n).fill(-1));
+    const arr = [];
+    let r = 0, c = 0, dr = 0, dc = 1;
+    for (let i = 0; i < n * n; i++) {
+      arr.push(r * n + c);
+      grid[r][c] = 1;
+      const nr = r + dr, nc = c + dc;
+      if (nr < 0 || nr >= n || nc < 0 || nc >= n || grid[nr][nc] !== -1) {
+        [dr, dc] = [dc, -dr];
+      }
+      r += dr; c += dc;
+    }
+    return arr;
+  },
+};
+
+/* Build solved board (array length n*n where index = position, value = tile id, 0 = blank) */
+function buildSolved(n, seqName) {
+  const order = SequenceGen[seqName](n);
+  const board = Array(n * n).fill(0);
+  for (let i = 0; i < order.length - 1; i++) board[order[i]] = i + 1;
+  board[order[order.length - 1]] = 0;
+  return { board, order };
+}
 /* -------------------- UPDATED GAME CORE -------------------- */
 const Game = (() => {
   let state = null;
