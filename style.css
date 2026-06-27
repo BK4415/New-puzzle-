@@ -239,7 +239,22 @@ button { font-family: inherit; cursor:pointer; }
 
 /* ===== CTA ===== */
 .home-cta { display:flex; flex-direction:column; gap:8px; width:100%; max-width:440px; }
-.btn {
+.btn .resume-dot{
+
+    width:10px;
+
+    height:10px;
+
+    border-radius:50%;
+
+    background:#36d95a;
+
+    display:inline-block;
+
+    margin-right:8px;
+
+}
+{
   border:1px solid var(--border);
   background: var(--surface);
   color: var(--text);
@@ -264,6 +279,24 @@ button { font-family: inherit; cursor:pointer; }
   display:flex; justify-content:space-between;
   padding: 6px 16px max(10px, env(safe-area-inset-bottom));
   color: var(--muted); font-size:11px; letter-spacing:1px;
+}
+
+/* ===== TIMER COLOR ===== */
+
+#hud-time{
+    transition:color .3s ease;
+}
+
+#hud-time.time-normal{
+    color:var(--text);
+}
+
+#hud-time.time-warning{
+    color:#ffb300;
+}
+
+#hud-time.time-danger{
+    color:#ff4d4d;
 }
 
 /* ===== GAME ===== */
@@ -324,6 +357,37 @@ button { font-family: inherit; cursor:pointer; }
 @keyframes hintPulse { 0%,100%{box-shadow:0 0 0 3px var(--gold), var(--tile-bevel);} 50%{box-shadow:0 0 0 8px rgba(217,164,65,.4), var(--tile-bevel);} }
 
 .tile.photo-tile { color: transparent; }
+.photo-number{
+
+    position:absolute;
+
+    right:6px;
+
+    bottom:6px;
+
+    width:22px;
+
+    height:22px;
+
+    border-radius:50%;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    background:rgba(0,0,0,.55);
+
+    color:#fff;
+
+    font-size:11px;
+
+    font-weight:bold;
+
+    pointer-events:none;
+
+}
 .tile.appear { animation: tileIn 360ms cubic-bezier(.2,.8,.2,1) both; }
 @keyframes tileIn { from { opacity:0; transform: scale(.6);} to {opacity:1; transform:none;} }
 
@@ -545,7 +609,19 @@ button { font-family: inherit; cursor:pointer; }
     margin:0 0 18px;
     color:var(--text-soft);
 }
+.result-rating{
 
+    margin:12px 0 18px;
+
+    font-size:30px;
+
+    color:var(--gold-soft);
+
+    letter-spacing:4px;
+
+    font-family:var(--font-display);
+
+}
 .result-grid{
     display:grid;
     grid-template-columns:repeat(2,1fr);
