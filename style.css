@@ -156,6 +156,48 @@ button { font-family: inherit; cursor:pointer; }
 .preview-tile.blank { background: transparent; box-shadow:none; }
 .preview-tile.photo { background-size: cover; background-position: center; color: transparent; }
 
+/* ===============================
+   PHOTO PRESET PICKER
+================================ */
+
+.photo-preset-row{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.preset-picker{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:12px;
+}
+
+.preset-preview{
+    width:120px;
+    height:120px;
+
+    overflow:hidden;
+
+    border:1px solid var(--border);
+    border-radius:12px;
+
+    background:var(--surface);
+
+    box-shadow:var(--shadow-md);
+}
+
+.preset-preview img{
+    width:100%;
+    height:100%;
+    display:block;
+    object-fit:cover;
+}
+
+.preset-picker .picker-arrow:hover{
+    background:var(--surface-2);
+}
+
 /* ===== SETTINGS PICKERS ===== */
 .settings { width:100%; max-width: 440px; display:flex; flex-direction:column; gap:10px; }
 .setting-row {
