@@ -34,46 +34,20 @@ const STORAGE_KEY  = 'npp.v1';
 /* -------------------- STORAGE -------------------- */
 const Storage = (() => {
   const DEFAULT = {
-    settings:{
-    size:3,
-    sequence:'Classic',
-    mode:'Number',
-    difficulty:'Medium',
-    sound:true,
-    vibration:true,
-    theme:'dark',
-    volume:0.7,
-
-    photoNumbers:true
-},
-   { size: 3, sequence: 'Classic', mode: 'Number', difficulty: 'Medium',
-                sound: true, vibration: true, theme: 'dark', volume: 0.7 },
-    last:     null,                 // last-saved in-progress game
-    highs:    {},                   // key `${size}-${seq}-${mode}` -> {moves,time}
+    settings: {
+      size: 3, sequence: 'Classic', mode: 'Number', difficulty: 'Medium',
+      sound: true, vibration: true, theme: 'dark', volume: 0.7, photoNumbers: true
+    },
+    last: null,
+    highs: {},
     stats: {
-      totalGames:0, totalWins:0, totalTime:0, totalMoves:0,
-      fastest:null, leastMoves:null, longestStreak:0, currentStreak:0,
-      bySize:{}, byMode:{}, history:[]
+      totalGames: 0, totalWins: 0, totalTime: 0, totalMoves: 0,
+      fastest: null, leastMoves: null, longestStreak: 0, currentStreak: 0,
+      bySize: {}, byMode: {}, history: []
     },
     achievements: {},
   };
-  let data = load();
 
-  function load() {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return structuredClone(DEFAULT);
-      const parsed = JSON.parse(raw);
-      return deepMerge(structuredClone(DEFAULT), parsed);
-    } catch (e) {
-      console.warn('Corrupted save, resetting.', e);
-      return structuredClone(DEFAULT);
-    }
-  }
-  function save() {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
-    catch (e) { console.warn('Save failed', e); }
-  }
   function deepMerge(target, src) {
     for (const k of Object.keys(src || {})) {
       if (src[k] && typeof src[k] === 'object' && !Array.isArray(src[k])) {
@@ -82,17 +56,21 @@ const Storage = (() => {
     }
     return target;
   }
+
+  let data = (() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return JSON.parse(JSON.stringify(DEFAULT));
+      return deepMerge(JSON.parse(JSON.stringify(DEFAULT)), JSON.parse(raw));
+    } catch (e) { return JSON.parse(JSON.stringify(DEFAULT)); }
+  })();
+
   return {
     get: () => data,
-    save,
-    reset() { data = structuredClone(DEFAULT); save(); },
-    exportJSON() { return JSON.stringify(data, null, 2); },
-    importJSON(json) {
-      const parsed = JSON.parse(json);
-      if (!parsed || typeof parsed !== 'object') throw new Error('Invalid file');
-      data = deepMerge(structuredClone(DEFAULT), parsed);
-      save();
-    },
+    save: () => localStorage.setItem(STORAGE_KEY, JSON.stringify(data)),
+    reset: () => { data = JSON.parse(JSON.stringify(DEFAULT)); localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); },
+    exportJSON: () => JSON.stringify(data, null, 2),
+    importJSON: (json) => { data = deepMerge(JSON.parse(JSON.stringify(DEFAULT)), JSON.parse(json)); localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
   };
 })();
 
