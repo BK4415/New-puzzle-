@@ -416,6 +416,7 @@ const UI = (() => {
   /* local state */
   let sIdx = { size: 0, sequence: 0, mode: 0, difficulty: 1 };
   let photoDataURL = null;
+let presetIndex = 0;
   let timerInt = null;
   let paused = false;
 
@@ -453,9 +454,21 @@ const UI = (() => {
     s.difficulty = DIFFS[sIdx.difficulty];
     Storage.save();
   }
+   function updatePresetPreview() {
+
+    const img = $('#preset-image');
+
+    if(photoDataURL){
+        img.src = photoDataURL;
+    }else{
+        img.src = PHOTO_PRESETS[presetIndex];
+    }
+
+   }
 
   /* ---------- preview ---------- */
-  function renderPreview() {
+   renderPreview();
+  updatePresetPreview();
     const n = SIZES[sIdx.size];
     previewEl.style.gridTemplateColumns = `repeat(${n}, 1fr)`;
     previewEl.style.gridTemplateRows    = `repeat(${n}, 1fr)`;
@@ -467,10 +480,10 @@ const UI = (() => {
       const t = document.createElement('div');
       t.className = 'preview-tile';
       if (labels[i] === 0) { t.classList.add('blank'); }
-      else if (MODES[sIdx.mode] === 'Photo' && photoDataURL) {
+      else if (MODES[sIdx.mode] === 'Photo') {
         t.classList.add('photo');
         const r = Math.floor(i / n), c = i % n;
-        t.style.backgroundImage = `url(${photoDataURL})`;
+        renderPreview();
         t.style.backgroundSize  = `${n*100}% ${n*100}%`;
         t.style.backgroundPosition = `${(c/(n-1))*100}% ${(r/(n-1))*100}%`;
       } else {
@@ -839,10 +852,14 @@ const UI = (() => {
   /* ---------- start a game from current settings ---------- */
   function startGame() {
     const s = Storage.get().settings;
-    if (s.mode === 'Photo' && !photoDataURL) { toast('Upload a photo first'); return; }
+    const selectedPhoto =
+    photoDataURL || PHOTO_PRESETS[presetIndex]; }
     Game.newGame({
       size: s.size, sequence: s.sequence, mode: s.mode, difficulty: s.difficulty,
-      photoURL: s.mode === 'Photo' ? photoDataURL : null,
+      photoURL:
+    s.mode === 'Photo'
+        ? selectedPhoto
+        : null,
     });
     paused = false;
     showScreen('game');
@@ -862,6 +879,33 @@ const UI = (() => {
         sIdx[which] = (sIdx[which] + dir + list.length) % list.length;
         Sound.click();
         renderPickers();
+         $('#preset-prev').addEventListener('click', () => {
+
+    photoDataURL = null;
+
+    presetIndex--;
+
+    if(presetIndex < 0)
+        presetIndex = PHOTO_PRESETS.length-1;
+
+    updatePresetPreview();
+    renderPreview();
+
+});
+
+$('#preset-next').addEventListener('click', () => {
+
+    photoDataURL = null;
+
+    presetIndex++;
+
+    if(presetIndex >= PHOTO_PRESETS.length)
+        presetIndex = 0;
+
+    updatePresetPreview();
+    renderPreview();
+
+});
       });
     });
 
