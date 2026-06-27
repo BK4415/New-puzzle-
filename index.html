@@ -460,49 +460,43 @@
 
 <section id="screen-result" class="screen screen-result">
 
-  <canvas id="fx-canvas" class="fx-canvas"></canvas>
+    <canvas id="fx-canvas" class="fx-canvas"></canvas>
 
-  <div class="result-card">
+    <div class="result-card">
 
-    <div class="trophy-wrap">
+        <!-- Trophy Image -->
+        <div class="trophy-wrap">
+            <img
+                src="assets/images/trophy.png"
+                alt="Winner Trophy"
+                class="trophy-img"
+                loading="lazy">
+        </div>
 
-      <div class="trophy" aria-hidden="true">
-        <svg viewBox="0 0 64 64" width="90" height="90" fill="none">
-          <path d="M18 10h28v10c0 10-6 18-14 18S18 30 18 20V10z" fill="#FFD54F"/>
-          <path d="M24 38h16v8H24z" fill="#D4AF37"/>
-          <path d="M20 46h24v8H20z" fill="#C49A00"/>
-          <path d="M10 12h8v8c0 6-4 10-8 10V12zm44 0h-8v8c0 6 4 10 8 10V12z" fill="#FFD54F"/>
-        </svg>
-      </div>
+        <h2 class="congrats">Congratulations!</h2>
 
-      <div class="trophy-glow"></div>
+        <p class="subtitle">You solved the puzzle.</p>
+
+        <div class="result-grid">
+            <div><span>Moves</span><strong id="res-moves">0</strong></div>
+            <div><span>Time</span><strong id="res-time">00:00</strong></div>
+            <div><span>Board</span><strong id="res-board">3×3</strong></div>
+            <div><span>Sequence</span><strong id="res-sequence">Classic</strong></div>
+            <div><span>Mode</span><strong id="res-mode">Number</strong></div>
+            <div><span>Record</span><strong id="res-record">—</strong></div>
+        </div>
+
+        <div id="new-record-badge" class="new-record hidden">
+            ★ NEW RECORD ★
+        </div>
+
+        <div class="modal-actions">
+            <button class="btn btn-primary" id="btn-play-again">Play Again</button>
+            <button class="btn btn-ghost" id="btn-result-home">Main Menu</button>
+            <button class="btn btn-ghost" id="btn-share">Share</button>
+        </div>
 
     </div>
-
-    <h2 class="congrats">Congratulations!</h2>
-
-    <p class="subtitle">You solved the puzzle.</p>
-
-    <div class="result-grid">
-      <div><span>Moves</span><strong id="res-moves">0</strong></div>
-      <div><span>Time</span><strong id="res-time">00:00</strong></div>
-      <div><span>Board</span><strong id="res-board">3×3</strong></div>
-      <div><span>Sequence</span><strong id="res-sequence">Classic</strong></div>
-      <div><span>Mode</span><strong id="res-mode">Number</strong></div>
-      <div><span>Record</span><strong id="res-record">—</strong></div>
-    </div>
-
-    <div id="new-record-badge" class="new-record hidden">
-      ★ NEW RECORD ★
-    </div>
-
-    <div class="modal-actions">
-      <button class="btn btn-primary" id="btn-play-again">Play Again</button>
-      <button class="btn btn-ghost" id="btn-result-home">Main Menu</button>
-      <button class="btn btn-ghost" id="btn-share">Share</button>
-    </div>
-
-  </div>
 
 </section>
 
