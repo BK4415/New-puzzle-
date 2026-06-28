@@ -658,24 +658,24 @@ function slideToward(tileIdx) {
 
        function animateTiles(){
 
-    Object.values(tileMap).forEach(tile=>{
+Object.values(tileMap).forEach(tile=>{
 
-        tile.cx += (tile.tx - tile.cx)*0.22;
+tile.cx+=(tile.tx-tile.cx)*0.18;
 
-        tile.cy += (tile.ty - tile.cy)*0.22;
+tile.cy+=(tile.ty-tile.cy)*0.18;
 
-        if(Math.abs(tile.cx-tile.tx)<0.1)
-            tile.cx=tile.tx;
+if(Math.abs(tile.cx-tile.tx)<0.05)
+tile.cx=tile.tx;
 
-        if(Math.abs(tile.cy-tile.ty)<0.1)
-            tile.cy=tile.ty;
+if(Math.abs(tile.cy-tile.ty)<0.05)
+tile.cy=tile.ty;
 
-        tile.style.transform =
-            `translate3d(${tile.cx}px,${tile.cy}px,0)`;
+tile.style.transform=
+`translate3d(${tile.cx}px,${tile.cy}px,0)`;
 
-    });
+});
 
-    requestAnimationFrame(animateTiles);
+requestAnimationFrame(animateTiles);
 
     }
     
@@ -971,24 +971,31 @@ function updateHUD() {
     }
 
     /* ---------- swipe / touch on board ---------- */
-       const Drag = {
+       const Drag={
 
-    active:false,
+active:false,
 
-    tile:null,
+tile:null,
 
-    axis:null,
+axis:null,
 
-    dir:0,
+dir:0,
 
-    startX:0,
-    startY:0,
+affected:[],
 
-    delta:0,
+startX:0,
+startY:0,
 
-    affected:[],
+currentX:0,
+currentY:0,
 
-    max:0
+delta:0,
+
+max:0,
+
+startTime:0,
+
+pointerId:null
 
 };
        function getAffectedTiles(startPos){
@@ -1045,124 +1052,138 @@ function updateHUD() {
        
  function attachBoardSwipe(){
 
-boardEl.addEventListener("pointerdown",e=>{
+window.addEventListener("pointermove",e=>{
 
-    const tile=e.target.closest(".tile");
+if(!Drag.active)return;
 
-    if(!tile)return;
+Drag.currentX=e.clientX;
 
-    const pos=Number(tile.dataset.pos);
+Drag.currentY=e.clientY;
 
-    const st=Game.get();
+let delta;
 
-    const n=st.size;
+if(Drag.axis==="x")
+delta=e.clientX-Drag.startX;
+else
+delta=e.clientY-Drag.startY;
 
-    const blank=st.blank;
+if(Drag.dir>0)
+delta=Math.max(0,Math.min(delta,Drag.max));
+else
+delta=Math.min(0,Math.max(delta,-Drag.max));
 
-    const tr=Math.floor(pos/n);
-    const tc=pos%n;
+Drag.delta=delta;
 
-    const br=Math.floor(blank/n);
-    const bc=blank%n;
+Drag.affected.forEach(pos=>{
 
-    if(tr!==br && tc!==bc)
-        return;
+const val=Game.get().board[pos];
 
-    Drag.active=true;
+const tile=tileMap[val];
 
-    Drag.tile=tile;
+if(!tile)return;
 
-    Drag.startX=e.clientX;
+if(Drag.axis==="x")
+tile.cx=tile.tx+delta;
+else
+tile.cy=tile.ty+delta;
 
-    Drag.startY=e.clientY;
-
-    Drag.delta=0;
-
-    Drag.affected=getAffectedTiles(pos);
-
-    if(tr===br){
-
-        Drag.axis="x";
-
-        Drag.dir=(tc<bc)?1:-1;
-
-    }else{
-
-        Drag.axis="y";
-
-        Drag.dir=(tr<br)?1:-1;
-
-    }
-
-    const rect=boardEl.getBoundingClientRect();
-
-    const pad=8;
-
-    Drag.max=(rect.width-pad*2)/n;
+});
 
 });
 
 window.addEventListener("pointermove",e=>{
 
-    if(!Drag.active)return;
+if(!Drag.active)return;
 
-    let d;
+Drag.currentX=e.clientX;
 
-    if(Drag.axis==="x")
-        d=e.clientX-Drag.startX;
-    else
-        d=e.clientY-Drag.startY;
+Drag.currentY=e.clientY;
 
-    if(Drag.dir>0)
-        d=Math.max(0,Math.min(d,Drag.max));
-    else
-        d=Math.min(0,Math.max(d,-Drag.max));
+let delta;
 
-    Drag.delta=d;
+if(Drag.axis==="x")
+delta=e.clientX-Drag.startX;
+else
+delta=e.clientY-Drag.startY;
 
-    Drag.affected.forEach(pos=>{
+if(Drag.dir>0)
+delta=Math.max(0,Math.min(delta,Drag.max));
+else
+delta=Math.min(0,Math.max(delta,-Drag.max));
 
-        const val=Game.get().board[pos];
+Drag.delta=delta;
 
-        const tile=tileMap[val];
+Drag.affected.forEach(pos=>{
 
-        if(!tile)return;
+const val=Game.get().board[pos];
 
-        if(Drag.axis==="x")
-            tile.cx=tile.tx+d;
-        else
-            tile.cy=tile.ty+d;
+const tile=tileMap[val];
 
-    });
+if(!tile)return;
+
+if(Drag.axis==="x")
+tile.cx=tile.tx+delta;
+else
+tile.cy=tile.ty+delta;
+
+});
 
 });
 
 window.addEventListener("pointerup",()=>{
 
-    if(!Drag.active)return;
+if(!Drag.active)return;
 
-    Drag.active=false;
+Drag.active=false;
 
-    if(Math.abs(Drag.delta)>Drag.max*0.4){
+const time=performance.now()-Drag.startTime;
 
-        const pos=Number(Drag.tile.dataset.pos);
+const velocity=Math.abs(Drag.delta)/Math.max(time,1);
 
-        const moves=Game.slideToward(pos);
+const halfway=Math.abs(Drag.delta)>Drag.max*0.4;
 
-        if(moves){
+const flick=velocity>0.55;
 
-            repositionAfterMoves(moves);
+if(halfway||flick){
 
-            updateHUD();
+const pos=Number(Drag.tile.dataset.pos);
 
-            updateControls();
+const moves=Game.slideToward(pos);
 
-            if(Game.isSolved())
-                onWin();
+if(moves){
 
-        }
+repositionAfterMoves(moves);
 
-    }
+updateHUD();
+
+updateControls();
+
+saveProgress();
+
+Sound.move();
+
+vibrate(8);
+
+if(Game.isSolved())
+onWin();
+
+}
+
+}
+
+Drag.affected.forEach(pos=>{
+
+const val=Game.get().board[pos];
+
+const tile=tileMap[val];
+
+if(!tile)return;
+
+tile.cx=tile.tx;
+
+tile.cy=tile.ty;
+
+});
 
 });
  }
