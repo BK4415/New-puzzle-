@@ -506,6 +506,30 @@
       const n = st.size;
       boardEl.style.gridTemplateColumns = `repeat(${n}, 1fr)`;
       boardEl.innerHTML = '';
+       // Create wooden slots
+
+for(let i=0;i<st.board.length;i++){
+
+    const slot=document.createElement("div");
+
+    slot.className="slot";
+
+    const r=Math.floor(i/n);
+    const c=i%n;
+
+    slot.style.position="absolute";
+
+    slot.style.left=`${pad + c*cell + 3}px`;
+
+    slot.style.top=`${pad + r*cell + 3}px`;
+
+    slot.style.width=`${cell-6}px`;
+
+    slot.style.height=`${cell-6}px`;
+
+    boardEl.appendChild(slot);
+
+}
       const rect = boardEl.getBoundingClientRect();
       const pad = 8;
       const cell = (rect.width - pad * 2) / n;
