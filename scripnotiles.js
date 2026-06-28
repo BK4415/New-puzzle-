@@ -573,62 +573,110 @@ function slideToward(tileIdx) {
 
     /* ---------- board render ---------- */
     function renderBoard(animateAppear = true) {
-      const st = Game.get();
-      const n = st.size;
-      boardEl.style.gridTemplateColumns = `repeat(${n}, 1fr)`;
-      boardEl.innerHTML = '';
-       // Create wooden slots
 
-for(let i=0;i<st.board.length;i++){
+    const st = Game.get();
+    const n = st.size;
 
-    const slot=document.createElement("div");
+    boardEl.innerHTML = "";
 
-    slot.className="slot";
+    boardEl.style.gridTemplateColumns = `repeat(${n},1fr)`;
 
-    const r=Math.floor(i/n);
-    const c=i%n;
+    const rect = boardEl.getBoundingClientRect();
 
-    slot.style.position="absolute";
+    const pad = 8;
+    const cell = (rect.width - pad * 2) / n;
 
-    slot.style.left=`${pad + c*cell + 3}px`;
+    window.tileMap = {};
 
-    slot.style.top=`${pad + r*cell + 3}px`;
+    for (let pos = 0; pos < st.board.length; pos++) {
 
-    slot.style.width=`${cell-6}px`;
+        const val = st.board[pos];
 
-    slot.style.height=`${cell-6}px`;
-
-    boardEl.appendChild(slot);
-
-}
-      const rect = boardEl.getBoundingClientRect();
-      const pad = 8;
-      const cell = (rect.width - pad * 2) / n;
-      for (let i = 0; i < st.board.length; i++) {
-        const val = st.board[i];
         if (val === 0) continue;
-        const t = document.createElement('div');
-        t.className = 'tile' + (animateAppear ? ' appear' : '');
-        t.dataset.val = val;
-        t.style.width  = `${cell - 6}px`;
-        t.style.height = `${cell - 6}px`;
-        t.style.fontSize = `${Math.max(14, cell * 0.38)}px`;
-        placeTile(t, i, cell, pad);
-        if (st.mode === 'Photo' && st.photoURL) {
-          const homeIdx = val - 1;
-          const hr = Math.floor(homeIdx / n), hc = homeIdx % n;
-          t.classList.add('photo-tile');
-          t.style.backgroundImage = `url(${st.photoURL})`;
-          t.style.backgroundSize  = `${n * (cell - 6)}px ${n * (cell - 6)}px`;
-          t.style.backgroundPosition = `-${hc * (cell - 6)}px -${hr * (cell - 6)}px`;
+
+        const tile = document.createElement("div");
+
+        tile.className = "tile";
+
+        if (animateAppear)
+            tile.classList.add("appear");
+
+        tile.dataset.value = val;
+        tile.dataset.pos = pos;
+
+        tile.style.width = `${cell-6}px`;
+        tile.style.height = `${cell-6}px`;
+
+        tile.style.position = "absolute";
+        tile.style.willChange = "transform";
+
+        const r = Math.floor(pos / n);
+        const c = pos % n;
+
+        tile.tx = pad + c * cell + 3;
+        tile.ty = pad + r * cell + 3;
+
+        tile.cx = tile.tx;
+        tile.cy = tile.ty;
+
+        tile.style.transform =
+            `translate3d(${tile.cx}px,${tile.cy}px,0)`;
+
+        if (st.mode === "Photo" && st.photoURL) {
+
+            const home = val - 1;
+
+            const hr = Math.floor(home / n);
+            const hc = home % n;
+
+            tile.classList.add("photo-tile");
+
+            tile.style.backgroundImage =
+                `url(${st.photoURL})`;
+
+            tile.style.backgroundSize =
+                `${n*(cell-6)}px ${n*(cell-6)}px`;
+
+            tile.style.backgroundPosition =
+                `-${hc*(cell-6)}px -${hr*(cell-6)}px`;
+
         } else {
-          t.textContent = val;
+
+            tile.textContent = val;
+
         }
-        t.addEventListener('click', () => handleTileClick(i));
-        boardEl.appendChild(t);
-      }
-      updateHUD();
-      updateControls();
+
+        boardEl.appendChild(tile);
+
+        tileMap[val] = tile;
+
+    }
+
+    updateHUD();
+
+    updateControls();
+
+       function animateTiles(){
+
+    Object.values(tileMap).forEach(tile=>{
+
+        tile.cx += (tile.tx - tile.cx)*0.22;
+
+        tile.cy += (tile.ty - tile.cy)*0.22;
+
+        if(Math.abs(tile.cx-tile.tx)<0.1)
+            tile.cx=tile.tx;
+
+        if(Math.abs(tile.cy-tile.ty)<0.1)
+            tile.cy=tile.ty;
+
+        tile.style.transform =
+            `translate3d(${tile.cx}px,${tile.cy}px,0)`;
+
+    });
+
+    requestAnimationFrame(animateTiles);
+
     }
     
     function placeTile(t, idx, cell, pad) {
@@ -639,17 +687,36 @@ for(let i=0;i<st.board.length;i++){
       t.dataset.pos = idx;
     }
 
-    function repositionAfterMoves(moves) {
-      const st = Game.get();
-      const n = st.size;
-      const rect = boardEl.getBoundingClientRect();
-      const pad = 8;
-      const cell = (rect.width - pad * 2) / n;
-      const tiles = boardEl.querySelectorAll('.tile');
-      for (const m of moves) {
-        const tile = [...tiles].find(t => Number(t.dataset.pos) === m.from);
-        if (tile) placeTile(tile, m.to, cell, pad);
-      }
+    function repositionAfterMoves(moves){
+
+    const st = Game.get();
+
+    const n = st.size;
+
+    const rect = boardEl.getBoundingClientRect();
+
+    const pad = 8;
+
+    const cell = (rect.width - pad * 2) / n;
+
+    moves.forEach(m=>{
+
+        const tile = tileMap[m.tile];
+
+        if(!tile) return;
+
+        tile.dataset.pos = m.to;
+
+        const r = Math.floor(m.to/n);
+
+        const c = m.to%n;
+
+        tile.tx = pad + c*cell + 3;
+
+        tile.ty = pad + r*cell + 3;
+
+    });
+
     }
 
     /* ---------- gameplay ---------- */
@@ -995,6 +1062,8 @@ function updateHUD() {
           renderPickers();
         });
       });
+       
+       animateTiles();
 
       /* preset controls */
       $('#preset-prev').addEventListener('click', () => {
