@@ -971,21 +971,213 @@ function updateHUD() {
     }
 
     /* ---------- swipe / touch on board ---------- */
-    function attachBoardSwipe() {
-      let sx = 0, sy = 0, touchIdx = -1;
-      boardEl.addEventListener('pointerdown', e => {
-        const t = e.target.closest('.tile');
-        touchIdx = t ? Number(t.dataset.pos) : -1;
-        sx = e.clientX; sy = e.clientY;
-      });
-      boardEl.addEventListener('pointerup', e => {
-        if (touchIdx < 0) return;
-        const dx = e.clientX - sx, dy = e.clientY - sy;
-        if (Math.hypot(dx, dy) < 12) { touchIdx = -1; return; } 
-        handleTileClick(touchIdx);
-        touchIdx = -1;
-      });
+       const Drag = {
+
+    active:false,
+
+    tile:null,
+
+    axis:null,
+
+    dir:0,
+
+    startX:0,
+    startY:0,
+
+    delta:0,
+
+    affected:[],
+
+    max:0
+
+};
+       function getAffectedTiles(startPos){
+
+    const st=Game.get();
+
+    const n=st.size;
+
+    const blank=st.blank;
+
+    const out=[];
+
+    const sr=Math.floor(startPos/n);
+    const sc=startPos%n;
+
+    const br=Math.floor(blank/n);
+    const bc=blank%n;
+
+    if(sr===br){
+
+        const min=Math.min(sc,bc);
+
+        const max=Math.max(sc,bc);
+
+        for(let c=min;c<=max;c++){
+
+            const p=sr*n+c;
+
+            if(st.board[p]!==0)
+                out.push(p);
+
+        }
+
+    }else{
+
+        const min=Math.min(sr,br);
+
+        const max=Math.max(sr,br);
+
+        for(let r=min;r<=max;r++){
+
+            const p=r*n+sc;
+
+            if(st.board[p]!==0)
+                out.push(p);
+
+        }
+
     }
+
+    return out;
+
+       }
+       
+ function attachBoardSwipe(){
+
+boardEl.addEventListener("pointerdown",e=>{
+
+    const tile=e.target.closest(".tile");
+
+    if(!tile)return;
+
+    const pos=Number(tile.dataset.pos);
+
+    const st=Game.get();
+
+    const n=st.size;
+
+    const blank=st.blank;
+
+    const tr=Math.floor(pos/n);
+    const tc=pos%n;
+
+    const br=Math.floor(blank/n);
+    const bc=blank%n;
+
+    if(tr!==br && tc!==bc)
+        return;
+
+    Drag.active=true;
+
+    Drag.tile=tile;
+
+    Drag.startX=e.clientX;
+
+    Drag.startY=e.clientY;
+
+    Drag.delta=0;
+
+    Drag.affected=getAffectedTiles(pos);
+
+    if(tr===br){
+
+        Drag.axis="x";
+
+        Drag.dir=(tc<bc)?1:-1;
+
+    }else{
+
+        Drag.axis="y";
+
+        Drag.dir=(tr<br)?1:-1;
+
+    }
+
+    const rect=boardEl.getBoundingClientRect();
+
+    const pad=8;
+
+    Drag.max=(rect.width-pad*2)/n;
+
+});
+
+window.addEventListener("pointermove",e=>{
+
+    if(!Drag.active)return;
+
+    let d;
+
+    if(Drag.axis==="x")
+        d=e.clientX-Drag.startX;
+    else
+        d=e.clientY-Drag.startY;
+
+    if(Drag.dir>0)
+        d=Math.max(0,Math.min(d,Drag.max));
+    else
+        d=Math.min(0,Math.max(d,-Drag.max));
+
+    Drag.delta=d;
+
+    Drag.affected.forEach(pos=>{
+
+        const val=Game.get().board[pos];
+
+        const tile=tileMap[val];
+
+        if(!tile)return;
+
+        if(Drag.axis==="x")
+            tile.cx=tile.tx+d;
+        else
+            tile.cy=tile.ty+d;
+
+    });
+
+});
+
+window.addEventListener("pointerup",()=>{
+
+    if(!Drag.active)return;
+
+    Drag.active=false;
+
+    if(Math.abs(Drag.delta)>Drag.max*0.4){
+
+        const pos=Number(Drag.tile.dataset.pos);
+
+        const moves=Game.slideToward(pos);
+
+        if(moves){
+
+            repositionAfterMoves(moves);
+
+            updateHUD();
+
+            updateControls();
+
+            if(Game.isSolved())
+                onWin();
+
+        }
+
+    }
+
+});
+ }
+       Drag.affected.forEach(pos=>{
+
+    const val=Game.get().board[pos];
+
+    const tile=tileMap[val];
+
+    if(!tile)return;
+
+    tile.tx=tile.tx;
+    tile.ty=tile.ty;
+
+});
 
     /* ---------- keyboard ---------- */
     function attachKeys() {
