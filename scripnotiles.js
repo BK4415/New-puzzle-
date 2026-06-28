@@ -225,66 +225,137 @@
       return out;
     }
 
-    function slideToward(tileIdx) {
-      const { board, size: n, blank } = state;
-      if (tileIdx === blank) return null;
-      const r1 = Math.floor(tileIdx / n), c1 = tileIdx % n;
-      const r0 = Math.floor(blank / n),   c0 = blank % n;
-      if (r1 !== r0 && c1 !== c0) return null;
+function slideToward(tileIdx) {
+    const { board, size: n, blank } = state;
 
-      const moves = [];
-      if (r1 === r0) {
-        const step = c1 < c0 ? -1 : 1;
-        for (let c = c0 + step; c !== c1 + step; c += step) {
-          const from = r0 * n + c, to = from - step;
-          board[to] = board[from]; board[from] = 0;
-          moves.push({ from, to });
+    if (tileIdx === blank) return null;
+
+    const tr = Math.floor(tileIdx / n);
+    const tc = tileIdx % n;
+    const br = Math.floor(blank / n);
+    const bc = blank % n;
+
+    if (tr !== br && tc !== bc) return null;
+
+    const moves = [];
+
+    if (tr === br) {
+
+        const dir = tc < bc ? 1 : -1;
+
+        let c = bc;
+
+        while (c !== tc) {
+
+            const from = tr * n + (c - dir);
+            const to   = tr * n + c;
+
+            board[to] = board[from];
+
+            moves.push({
+                tile: board[from],
+                from,
+                to
+            });
+
+            c -= dir;
         }
-      } else {
-        const step = r1 < r0 ? -1 : 1;
-        for (let r = r0 + step; r !== r1 + step; r += step) {
-          const from = r * n + c1, to = from - step * n;
-          board[to] = board[from]; board[from] = 0;
-          moves.push({ from, to });
+
+    } else {
+
+        const dir = tr < br ? 1 : -1;
+
+        let r = br;
+
+        while (r !== tr) {
+
+            const from = (r - dir) * n + tc;
+            const to   = r * n + tc;
+
+            board[to] = board[from];
+
+            moves.push({
+                tile: board[from],
+                from,
+                to
+            });
+
+            r -= dir;
         }
-      }
-      state.blank = tileIdx;
-      state.moves += 1;
-      state.undoStack.push({ tileIdx: blank });
-      state.redoStack.length = 0;
-      if (!state.startedAt) state.startedAt = Date.now() - state.elapsed;
-      return moves;
+
+    }
+
+    board[tileIdx] = 0;
+
+    state.undoStack.push({
+        blankBefore: blank,
+        blankAfter: tileIdx
+    });
+
+    state.redoStack.length = 0;
+
+    state.blank = tileIdx;
+
+    state.moves++;
+
+    if (!state.startedAt)
+        state.startedAt = Date.now() - state.elapsed;
+
+    return moves;
+          }
     }
 
     function undo() {
-      const m = state.undoStack.pop();
-      if (!m) return null;
-      const oldBlank = state.blank;
-      const moves = slideTowardInternal(m.tileIdx);
-      if (moves) {
-        state.redoStack.push({ tileIdx: oldBlank });
-        state.moves -= 2; 
-      }
-      return moves;
+
+    if (!state.undoStack.length) return null;
+
+    const last = state.undoStack.pop();
+
+    const moves = slideTowardInternal(last.blankBefore);
+
+    if (moves) {
+
+        state.redoStack.push({
+            blankBefore: last.blankAfter,
+            blankAfter: last.blankBefore
+        });
+
+        state.moves -= 2;
+
+    }
+
+    return moves;
+             }
     }
     
     function redo() {
-      const m = state.redoStack.pop();
-      if (!m) return null;
-      const oldBlank = state.blank;
-      const moves = slideTowardInternal(m.tileIdx);
-      if (moves) {
-        state.undoStack.push({ tileIdx: oldBlank });
-        state.moves -= 1;
-      }
-      return moves;
+
+    if (!state.redoStack.length) return null;
+
+    const last = state.redoStack.pop();
+
+    const moves = slideTowardInternal(last.blankBefore);
+
+    if (moves) {
+
+        state.undoStack.push(last);
+
+        state.moves--;
+
+    }
+
+    return moves;
     }
     
     function slideTowardInternal(tileIdx) {
-      const before = state.undoStack.length;
-      const moves = slideToward(tileIdx);
-      if (moves) state.undoStack.length = before; 
-      return moves;
+
+    const before = state.undoStack.length;
+
+    const result = slideToward(tileIdx);
+
+    state.undoStack.length = before;
+
+    return result;
     }
 
     function isSolved() {
