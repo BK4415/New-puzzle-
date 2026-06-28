@@ -379,6 +379,9 @@ button { font-family: inherit; cursor:pointer; }
         #d2a679,
         #8b5a2b
     );
+   touch-action:none;
+will-change:transform;
+   overflow:hidden;
 
     color:#5d3a1a;
 
