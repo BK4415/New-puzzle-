@@ -1200,6 +1200,66 @@ tile.cy=tile.ty;
 
 });
 
+       const Drag = {
+    active: false,
+    tile: null,
+    pointerId: null,
+
+    startX: 0,
+    startY: 0,
+
+    currentX: 0,
+    currentY: 0,
+
+    deltaX: 0,
+    deltaY: 0,
+
+    axis: null,
+    direction: 0,
+
+    affected: [],
+    maxDistance: 0,
+
+    startTime: 0
+};
+
+boardEl.addEventListener("pointerdown", (e) => {
+
+    const tile = e.target.closest(".tile");
+    if (!tile) return;
+
+    Drag.active = true;
+    Drag.tile = tile;
+
+    Drag.pointerId = e.pointerId;
+
+    Drag.startX = e.clientX;
+    Drag.startY = e.clientY;
+
+    Drag.currentX = e.clientX;
+    Drag.currentY = e.clientY;
+
+    Drag.deltaX = 0;
+    Drag.deltaY = 0;
+
+    Drag.startTime = performance.now();
+
+    // Optional (prevents losing drag)
+    tile.setPointerCapture(e.pointerId);
+
+    console.log("Drag Started", tile.dataset.pos);
+
+});
+Drag.pointerId=e.pointerId;
+
+Drag.startTime=performance.now();
+
+Drag.currentX=e.clientX;
+
+Drag.currentY=e.clientY;
+
+Drag.tile.setPointerCapture(e.pointerId);
+       
     /* ---------- keyboard ---------- */
     function attachKeys() {
       document.addEventListener('keydown', e => {
