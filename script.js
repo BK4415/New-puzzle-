@@ -98,10 +98,10 @@
   /* -------------------- SOUND -------------------- */
   const Sound = (() => {
     const sounds = {
-      move: new Audio('assets/sound/move.wav'),
-      click: new Audio('assets/sound/click.wav'),
-      win: new Audio('assets/sound/win.wav'),
-      err: new Audio('assets/sound/error.wav')
+      move: new Audio('assets/sounds/move.wav'),
+      click: new Audio('assets/sounds/click.wav'),
+      win: new Audio('assets/sounds/win.wav'),
+      err: new Audio('assets/sounds/error.wav')
     };
 
     function playFile(audioObject) {
